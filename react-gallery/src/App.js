@@ -31,7 +31,6 @@ const App = () => {
       <div className="container" >
         <SearchForm onSearch={performSearch} searchTerm={setSearchTerm} />
         <Nav />
-        
         <Routes>
           <Route path="/" element={<Gallery data={photos} searchTerm={searchTerm} />}/>
           <Route path="/gsp" element={<Gallery data={photos} searchTerm={searchTerm} />} />
