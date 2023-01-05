@@ -30,11 +30,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="container" >
-        <SearchForm onSearch={performSearch} searchTerm={setSearchTerm} />
+      <SearchForm onSearch={performSearch} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <Nav />
         <Routes>
           <Route path="/" element={<Gallery data={photos} searchTerm={searchTerm} />}/>
-          <Route path="/gsp" element={<Gallery data={photos} searchTerm={searchTerm} />} />
+          
           <Route path="*" element={<UnmatchedURL />} />
 
         </Routes>
