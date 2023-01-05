@@ -6,10 +6,10 @@ const SearchForm = ({ onSearch, searchTerm, setSearchTerm }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setSearchTerm(input.current.value)
-        console.log(searchTerm)
-        onSearch(searchTerm)
         
         e.target.reset()
+        console.log(searchTerm)
+
     }
 
     return (

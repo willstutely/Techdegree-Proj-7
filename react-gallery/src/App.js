@@ -11,7 +11,7 @@ import UnmatchedURL from './components/UnmatchedURL';
 const App = () => {
   const [photos, setPhotos] = useState([]);
   // const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("cats");
+  const [searchTerm, setSearchTerm] = useState("dogs");
 
   const performSearch = (searchTerm) => {
     axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&text=${searchTerm}&tags=${searchTerm}&safe_search=1&content_type=1&format=json&nojsoncallback=1`)
@@ -24,8 +24,8 @@ const App = () => {
   }
 
   useEffect(() => {
-    return performSearch()
-  }, [])
+    return performSearch(searchTerm)
+  }, [searchTerm])
 
   return (
     <BrowserRouter>
