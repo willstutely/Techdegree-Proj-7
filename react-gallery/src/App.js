@@ -5,7 +5,7 @@ import axios from 'axios';
 import SearchForm from './components/SearchForm';
 import Nav from './components/Nav';
 import Gallery from './components/Gallery';
-import NotFound from './components/NotFound';
+import UnmatchedURL from './components/UnmatchedURL';
 
 const App = () => {
   const [photos, setPhotos] = useState([]);
@@ -34,7 +34,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Gallery data={photos} searchTerm={searchTerm} />}/>
           <Route path="/gsp" element={<Gallery data={photos} searchTerm={searchTerm} />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<UnmatchedURL />} />
 
         </Routes>
 
