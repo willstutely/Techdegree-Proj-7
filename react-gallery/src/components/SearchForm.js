@@ -2,8 +2,6 @@ import React from 'react';
 
 
 const SearchForm = ({onSearch, searchTerm, setSearchTerm}) => {
-    
-
     const onSearchChange = (e) => {
         setSearchTerm(e.target.value)
     }
