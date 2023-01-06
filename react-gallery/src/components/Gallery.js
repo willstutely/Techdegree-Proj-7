@@ -1,12 +1,11 @@
 import React from 'react';
 import Photo from './Photo';
 import NotFound from './NotFound';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 
 const Gallery = ({data, searchTerm, setSearchTerm}) => {
-    const { url } = useParams();
-    setSearchTerm(url)
-    
+    // const { url } = useParams();
+    // setSearchTerm(url)
     const results = data
     let photos;
     if (results.length > 0) {

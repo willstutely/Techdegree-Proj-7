@@ -1,12 +1,8 @@
 import React, { useRef } from 'react';
-import { useParams } from 'react-router-dom';
+
 
 
 const SearchForm = ({ setSearchTerm }) => {
-    const { url } = useParams();
-    if (url !== "/") {
-        setSearchTerm(url)
-    }
     const input = useRef();
     const handleSubmit = (e) => {
         e.preventDefault();
