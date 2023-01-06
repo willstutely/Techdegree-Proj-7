@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 import apiKey from './config';
 
@@ -16,6 +16,7 @@ const App = () => {
   const performSearch = (searchTerm) => {
     axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&text=${searchTerm}&tags=${searchTerm}&safe_search=1&content_type=1&format=json&nojsoncallback=1`)
       .then(response => {
+        console.log(searchTerm)
         setPhotos(response.data.photos.photo)
       })
       .catch(error => {
@@ -28,20 +29,18 @@ const App = () => {
   }, [searchTerm])
 
   return (
-    <BrowserRouter>
-      <div className="container" >
-      <SearchForm onSearch={performSearch} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <Nav />
-        <Routes>
-          <Route path="/" element={<Gallery data={photos} searchTerm={searchTerm} />}/>
-          
-          <Route path="*" element={<UnmatchedURL />} />
+    <div className="container" >
+      <SearchForm setSearchTerm={setSearchTerm} />
+      <Nav />
+      <Routes>
+        <Route path="/" element={<Gallery data={photos} searchTerm={searchTerm} />} />
+        <Route path="/:url" element={<Gallery data={photos} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />} />
+        <Route path="/:url" element={<Gallery data={photos} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />} />
+        <Route path="/:url" element={<Gallery data={photos} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />} />
+        <Route path="*" element={<UnmatchedURL />} />
+      </Routes>
+    </div>
 
-        </Routes>
-
-
-      </div>
-    </BrowserRouter>
   )
 }
 

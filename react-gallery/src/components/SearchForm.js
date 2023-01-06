@@ -1,15 +1,17 @@
 import React, { useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
 
-const SearchForm = ({ onSearch, searchTerm, setSearchTerm }) => {
+const SearchForm = ({ setSearchTerm }) => {
+    const { url } = useParams();
+    if (url !== "/") {
+        setSearchTerm(url)
+    }
     const input = useRef();
     const handleSubmit = (e) => {
         e.preventDefault();
         setSearchTerm(input.current.value)
-        
         e.target.reset()
-        console.log(searchTerm)
-
     }
 
     return (
