@@ -13,13 +13,18 @@ import UnmatchedURL from './components/UnmatchedURL';
 
 // App component which handles app state, contains the search function, and renders the app
 const App = () => {
+  // Store Nav button search terms in variables to keep the performSearch function cleaner
   const gsp = "german shorthaired pointer";
   const goldens = "golden retriever";
   const collie = "collie puppy";
+
+  // State of each of the fixed Nav buttons
   const [photosGSP, setPhotosGSP] = useState([]);
   const [photosGoldens, setPhotosGoldens] = useState([]);
   const [photosCollie, setPhotosCollie] = useState([]);
 
+  // State for the search feature. Default state is set to 'cows' because
+  // Gary Larson was right... there has to be more to cows than what we see
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("cows");
