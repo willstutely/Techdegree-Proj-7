@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 
@@ -26,44 +26,41 @@ const App = () => {
   // State for the search feature. Default state is set to 'cows' because
   // Gary Larson was right... there has to be more to cows than what we see
   const [photos, setPhotos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("cows");
 
   // Search function: fetches data from Flickr using Axios, and updates relevant state based on search term
-  const performSearch = (query) => {
+  const performSearch = useCallback(query => {
     axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&text=${query}&tags=${query}&safe_search=1&content_type=1&format=json&nojsoncallback=1`)
       .then(response => {
-        console.log(query)
         const data = response.data.photos.photo;
         if (query === searchTerm) {
           setPhotos(data)
           setLoading(false)
-          // putting a console.log statement here to show that the loading state is changing on search
-          // even if the 'loading' isn't displaying on a quick search
-          console.log(loading)
         }
         if (query === gsp) {
           setPhotosGSP(data)
-          setLoading(false)
         }
         if (query === goldens) {
           setPhotosGoldens(data)
-          setLoading(false)
         }
         if (query === collie) {
           setPhotosCollie(data)
-          setLoading(false)
         }
       })
       .catch(error => {
         console.log('Error fetching and parsing data', error);
       });
-  }
+    }, 
+    [searchTerm]
+  );
 
   // useEffect hook calls the performSearch function whenever a change in searchTerm state is detected
   useEffect(() => {
+    setLoading(true)
     performSearch(searchTerm)
-  }, [searchTerm])
+    
+  }, [searchTerm, performSearch, setLoading])
 
   // useEffect hook calls performSearch on app load for the preset Nav options.
   // It conditionally checks the state of each option and if empty calls the function
@@ -79,7 +76,7 @@ const App = () => {
     if (Object.keys(photosCollie).length === 0) {
       performSearch(collie)
     }
-  }, []);
+  }, [performSearch, photosCollie, photosGSP, photosGoldens]);
 
   return (
     <div className="container" >
@@ -88,9 +85,8 @@ const App = () => {
       {/* Ternary Operator checks if the page loading state is true or false and conditionally displays a loading message */}
       {loading
       ? <p>Loading...</p>
-      : 
-      <Routes>
-        <Route path="/" element={<Gallery data={photos} searchTerm={searchTerm} />} />
+      : <Routes>
+        <Route path="/" exact element={<Gallery data={photos} searchTerm={searchTerm} />} />
         <Route path="/search/:id" element={<Gallery data={photos} searchTerm={searchTerm} />} />
         <Route path="/german shorthaired pointer" element={<Gallery data={photosGSP} searchTerm={gsp} />} />
         <Route path="/golden retriever" element={<Gallery data={photosGoldens} searchTerm={goldens} />} />
