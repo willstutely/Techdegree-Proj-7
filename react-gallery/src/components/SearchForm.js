@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, createSearchParams } from 'react-router-dom';
 
 // SearchForm functional component uses the useRef hook to set the searchTerm state
 // to the user's input on the search form. 
 const SearchForm = ({ setSearchTerm }) => {
     const input = useRef();
     const navigate = useNavigate();
+    
 
     // function to take the user's input and update the searchTerm state
     // which makes a change to the searchTerm state and automatically call the performSearch
@@ -15,8 +16,13 @@ const SearchForm = ({ setSearchTerm }) => {
         e.preventDefault();
         let userInput = input.current.value;
         setSearchTerm(userInput)
-        let path = `/search/${userInput}`
-        navigate(path);
+        
+        // Dynamically build the url for the route path
+        const params = { query: userInput }
+        navigate({
+            pathname: `/search/${userInput}`,
+            search: `?${createSearchParams(params)}`
+        });
         e.target.reset()
     }
 

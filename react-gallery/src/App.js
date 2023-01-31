@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 // importing Flickr api key from the hidden config.js file
@@ -29,6 +29,12 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("cows");
 
+  // Location data is culled to allow navigating the history and fetching
+  // image data based on the url search parameters.
+  const location = useLocation();
+  const searchQuery = new URLSearchParams(location.search).get('query');
+  const locationKey = location.key;
+
   // Search function: fetches data from Flickr using Axios, and updates relevant state based on search term
   const performSearch = useCallback(query => {
     axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&text=${query}&tags=${query}&safe_search=1&content_type=1&format=json&nojsoncallback=1`)
@@ -51,7 +57,7 @@ const App = () => {
       .catch(error => {
         console.log('Error fetching and parsing data', error);
       });
-    }, 
+  },
     [searchTerm]
   );
 
@@ -59,8 +65,8 @@ const App = () => {
   useEffect(() => {
     setLoading(true)
     performSearch(searchTerm)
-    
-  }, [searchTerm, performSearch, setLoading])
+
+  }, [searchTerm, performSearch, setLoading]);
 
   // useEffect hook calls performSearch on app load for the preset Nav options.
   // It conditionally checks the state of each option and if empty calls the function
@@ -78,21 +84,31 @@ const App = () => {
     }
   }, [performSearch, photosCollie, photosGSP, photosGoldens]);
 
+  // useEffect hook updates searchTerm when change in location is detected
+  // and uses the URL params to pass as an argument to said function in order to
+  // provide active history
+  // it ignores any url already containing the static nav links for gsp, goldens, and collie
+  useEffect(() => {
+    if (typeof searchQuery === 'string' && (searchQuery !== gsp) && (searchQuery !== goldens) && (searchQuery !== collie)) {
+      setSearchTerm(searchQuery)
+    }
+  }, [setSearchTerm, setLoading, searchQuery, gsp, goldens, collie, locationKey]);
+
   return (
     <div className="container" >
-      <SearchForm setSearchTerm={setSearchTerm} searchTerm={searchTerm}/>
+      <SearchForm setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
       <Nav />
       {/* Ternary Operator checks if the page loading state is true or false and conditionally displays a loading message */}
       {loading
-      ? <p>Loading...</p>
-      : <Routes>
-        <Route path="/" exact element={<Gallery data={photos} searchTerm={searchTerm} />} />
-        <Route path="/search/:id" element={<Gallery data={photos} searchTerm={searchTerm} />} />
-        <Route path="/german shorthaired pointer" element={<Gallery data={photosGSP} searchTerm={gsp} />} />
-        <Route path="/golden retriever" element={<Gallery data={photosGoldens} searchTerm={goldens} />} />
-        <Route path="/collie puppy" element={<Gallery data={photosCollie} searchTerm={collie} />} />
-        <Route path="*" element={<UnmatchedURL />} />
-      </Routes>
+        ? <p>Loading...</p>
+        : <Routes>
+          <Route path="/" exact element={<Gallery data={photos} searchTerm={searchTerm} />} />
+          <Route path="/search/:id" element={<Gallery data={photos} searchTerm={searchQuery} />} />
+          <Route path="/german shorthaired pointer" element={<Gallery data={photosGSP} searchTerm={gsp} />} />
+          <Route path="/golden retriever" element={<Gallery data={photosGoldens} searchTerm={goldens} />} />
+          <Route path="/collie puppy" element={<Gallery data={photosCollie} searchTerm={collie} />} />
+          <Route path="*" element={<UnmatchedURL />} />
+        </Routes>
       }
     </div>
   )
