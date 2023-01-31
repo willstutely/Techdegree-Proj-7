@@ -65,7 +65,6 @@ const App = () => {
   useEffect(() => {
     setLoading(true)
     performSearch(searchTerm)
-
   }, [searchTerm, performSearch, setLoading]);
 
   // useEffect hook calls performSearch on app load for the preset Nav options.
@@ -84,7 +83,7 @@ const App = () => {
     }
   }, [performSearch, photosCollie, photosGSP, photosGoldens]);
 
-  // useEffect hook updates searchTerm when change in location is detected
+  // useEffect hook updates searchTerm when change in locationKey is detected
   // and uses the URL params to pass as an argument to said function in order to
   // provide active history
   // it ignores any url already containing the static nav links for gsp, goldens, and collie
